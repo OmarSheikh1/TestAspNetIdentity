@@ -76,18 +76,21 @@ namespace TestAspNetIdentity.Controllers
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
                 //Get Roles assigned to User
-                var role = await userManager.GetRolesAsync(user);
+               // var role = await userManager.GetRolesAsync(user);
 
                 //Get Claims assigned to User
                 var claimsPrincipal = await signInManager.CreateUserPrincipalAsync(user);
                var userClaims = claimsPrincipal.Claims.ToList();
+                //var addClaims = from x in userClaims
+                //                where x.Type == CustomClaimTypes.Permission
+                //                select x;
 
                 try
                 {
                     var claims = new[]
                     {
-                        new Claim(ClaimTypes.NameIdentifier,model.Username.ToString()),
-                        new Claim(ClaimTypes.Role,role.FirstOrDefault())
+                        new Claim(ClaimTypes.NameIdentifier,model.Username.ToString())
+                        //new Claim(ClaimTypes.Role,role.FirstOrDefault())
 
                     }.Union(userClaims);
                     
