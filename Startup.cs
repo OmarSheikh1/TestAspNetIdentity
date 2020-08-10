@@ -21,6 +21,9 @@ using TestAspNetIdentity.Models;
 
 namespace TestAspNetIdentity
 {
+    //https://benfoster.io/blog/asp-net-identity-role-claims/
+    //http://blog.geveo.com/Claim-based-authorization-ASP-core
+    //https://stackoverflow.com/questions/42100465/users-roles-permissions-using-asp-net-core-identity-3
     public class Startup
     {
         public Startup(IConfiguration configuration)
