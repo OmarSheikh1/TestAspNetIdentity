@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TestAspNetIdentity.Helper;
+using TestAspNetIdentity.Interceptor;
 
 namespace TestAspNetIdentity.Controllers
 {
@@ -13,7 +14,7 @@ namespace TestAspNetIdentity.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-       
+
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -24,6 +25,23 @@ namespace TestAspNetIdentity.Controllers
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
+        }
+        //API : weatherforecast/GetAPI
+
+        [HttpGet]
+        [Route("GetAPI")]
+        [ApiKeyAuth]
+        //[Authorize(Roles = "Member")]
+        public IEnumerable<WeatherForecast> GetAPI()
+        {
+            var rng = new Random();
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = rng.Next(-20, 55),
+                Summary = "API : " + Summaries[rng.Next(Summaries.Length)]
+            })
+            .ToArray();
         }
 
         [HttpGet]
@@ -55,6 +73,8 @@ namespace TestAspNetIdentity.Controllers
             })
             .ToArray();
         }
+
+        //API : weatherforecast/crmread
 
         [HttpGet]
         [Authorize(Policy = CRMPermissions.Read)]
