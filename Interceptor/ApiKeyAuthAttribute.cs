@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//https://www.youtube.com/watch?v=Zo3T_See7iI
+
 namespace TestAspNetIdentity.Interceptor
 {
     [AttributeUsage(validOn: AttributeTargets.Class | AttributeTargets.Method)]
