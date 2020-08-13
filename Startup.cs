@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -65,18 +66,37 @@ namespace TestAspNetIdentity
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 
             }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = false;
-                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-           //         ClockSkew = TimeSpan.Zero
-                };
-            });
+                    {
+                        x.RequireHttpsMetadata = false;
+                        x.SaveToken = false;
+                        x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(key),
+                            ValidateIssuer = false,
+                            ValidateAudience = false
+                            //         ClockSkew = TimeSpan.Zero
+                        };
+                    //}).AddJwtBearer("Ealing", options =>
+                    //{
+                    //    var mySecret = "asdv234234^&%&^%&^hjsdfb2%%%";
+                    //    var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(mySecret));
+
+                    //    var myIssuer = "http://mysite.com";
+                    //    var myAudience = "http://myaudience.com";
+
+                    //    options.Authority = "https://securetoken.google.com/my-firebase-project";
+                    //    options.TokenValidationParameters = new TokenValidationParameters
+                    //    {
+                    //        ValidateIssuer = true,
+                    //        ValidIssuer = myIssuer,
+                    //        ValidateAudience = true,
+                    //        ValidAudience = myAudience,
+                    //        ValidateLifetime = true
+                    //    };
+                    })
+
+            ;
 
             services.AddAuthorization(options =>
             {
@@ -84,11 +104,20 @@ namespace TestAspNetIdentity
                 //    policy => policy.RequireClaim(CustomClaimTypes.Permission, CRMPermissions.Read));
                 //options.AddPolicy(CRMPermissions.Update,
                 //    policy => policy.RequireClaim(CustomClaimTypes.Permission, CRMPermissions.Update));
-                options.AddPolicy(CRMPermissions.Read, 
+                options.AddPolicy(CRMPermissions.Read,
                     policy => { policy.RequireClaim(CustomClaimTypes.Permission, CRMPermissions.Read); });
-                options.AddPolicy(CRMPermissions.Update, 
+                options.AddPolicy(CRMPermissions.Update,
                     policy => { policy.RequireClaim(CustomClaimTypes.Permission, CRMPermissions.Update); });
             });
+
+            //services
+            //    .AddAuthorization(options =>
+            //    {
+            //        options.DefaultPolicy = new AuthorizationPolicyBuilder()
+            //            .RequireAuthenticatedUser()
+            //            .AddAuthenticationSchemes("Firebase", "Custom")
+            //            .Build();
+            //    });
 
             services.AddControllers();
         }
