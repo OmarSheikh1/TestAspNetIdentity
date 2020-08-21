@@ -43,7 +43,15 @@ namespace TestAspNetIdentity.Controllers
                     UserName = model.Email,
                     Email = model.Email
                 };
-                var result = await userManager.CreateAsync(user, model.Password);
+                var resultUser = await userManager.CreateAsync(user, model.Password);
+                string code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var result = await userManager.ConfirmEmailAsync(user, code);
+                if (result.Succeeded)
+                {
+
+                }
+
                 IdentityResult roleResult;
                 bool adminRoleExists = await roleManager.RoleExistsAsync(model.Role);
                 if (!adminRoleExists)
